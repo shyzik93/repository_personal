@@ -4,7 +4,7 @@ import urllib2
 def fopen(path, mode=None, data=None):
   if not mode: mode='r'
   f = open(path, mode)
-  if not data:
+  if data:
     f.write(data)
     f.close()
   else:
