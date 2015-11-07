@@ -39,3 +39,14 @@ api = API(key, secret)
 print api.get_user_info(user_id=123456789)
 ```
 В результате будет вызван URL "https://api.example.com/v1/get_user_info?user_id=123456789" . В функции shell также можно реализовать предварительную обработку ответа сервера - например, ошибок.
+
+## archivetools
+
+Модуль для работы с архивами. Пока только zip. Модуль содержит один класс ArchiveTools(), имеющий следующие функции:
+
+- ArchiveTools.unpack(archive_path, unpack_dir) - распаковывает архив с путём archive_path в директорию unpack_dir.
+- ArchiveTools.pack(archive_path, unpack_dir, mode='w', start_dir='', user_zp=None) - архивирует содержимое директории unpack_dir в архив по пути archive_path. Режим mode позволяет как создать новый архив ("w" - по умолчанию), так и дополнить существующий ("a"). start_dir - начальная директория в архиве, в которую будет записываться содержимое. user_zp - это бъект Вашего архива, если он уже открыт, если он указан, то путь archive_path будет проигнорирован.
+- ArchiveTools.zipopen(archive_path, mode, _type=zipfile.ZIP_DEFLATED) - возвращает объект архива по пути archive_path.
+
+## internettools
+Модуль с инструментами для работы с Интернетом  и веб-документами.
