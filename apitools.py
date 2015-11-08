@@ -4,6 +4,7 @@
 class proto_api(object):
   def __init__(self):
     pass
+
   def shell(self, api_name, api_params):
     '''необхдимо перегрузить!
        Функция принимает имя метода и параметры,
