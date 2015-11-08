@@ -12,7 +12,7 @@ def encode_multipart(key_words, *list_file_dicts):
     f = open(file_dict['path'], 'rb')
     files.append((file_dict['field'], filename, mimetype, f.read()))
     f.close()
-      
+
   form_fields = key_words.items()
   boundary = mimetools.choose_boundary()
   part_boundary = '--' + boundary
@@ -40,11 +40,12 @@ def encode_multipart(key_words, *list_file_dicts):
   return '\r\n'.join(flattened), boundary
 
 class InternetTools():
-  def __init__(self, logdir=None):
+  def __init__(self, logdir=None, geterrors=False):
     if logdir == None:
       self.logdir = os.path.join('logs', '%s')
       if not os.path.exists(self.logdir%''): os.mkdir(self.logdir%'')
     else: self.logdir = logdir
+    self.geterrors = geterrors
     self.cookie_handler = urllib2.HTTPCookieProcessor(cookielib.CookieJar())
     self.redirect_handler = urllib2.HTTPRedirectHandler()
     self.http_handler = urllib2.HTTPHandler()
@@ -66,19 +67,33 @@ class InternetTools():
     f.write(str(response.info()))
     f.close()
 
-  def urlopen(self, url, log_name=None, POST=None, GET=None):
+  def urlopen(self, url, log_name=None, POST=None, GET=None, headers={}):
     
     if 'dict' in str(type(POST)): POST = urllib.urlencode(POST)
     if 'dict' in str(type(GET)): GET = urllib.urlencode(GET)
 
-    if GET == None and POST == None: response = self.opener.open(url)
-    elif GET != None and POST != None: response = self.opener.open(url +'?'+ GET, POST)
-    elif GET == None: response = self.opener.open(url, POST)
-    elif POST == None: response = self.opener.open(url +'?'+ GET)
+    if GET != None: url += '?' + GET
+    self.opener.addheaders.extend(headers.items())
+
+    if not self.geterrors: response = self.opener.open(url, POST)
+    else:
+      try: response = self.opener.open(url, POST)
+      except Exception as e: return e[0], None, None
+
+    #if POST == None: response = self.opener.open(url)
+    #else: response = self.opener.open(url, POST)
+
+    #if GET == None and POST == None: response = self.opener.open(url)
+    #elif GET != None and POST != None: response = self.opener.open(url +'?'+ GET, POST)
+    #elif GET == None: response = self.opener.open(url, POST)
+    #elif POST == None: response = self.opener.open(url +'?'+ GET)
     #print dir(self.opener)
+    print 'headers:', self.opener.addheaders
     str_page = response.read()
     if log_name != None: self.save_log(log_name, str_page, response)
-    return str_page, response
+
+    if not self.geterrors: return str_page, response
+    else: return None, str_page, response
 
   def send_files(self, url, log_name, key_words, *list_file_dicts):
     POST, boundary = encode_multipart(key_words, *list_file_dicts)
@@ -142,3 +157,7 @@ class InternetTools():
 
       captcha_key = raw_input('Input the captcha number:')
       key_value[captcha_input_name] = captcha_key
+
+if __name__ == '__main__':
+  it = InternetTools(geterrors=True)
+  print it.urlopen('http://for-skills.h2m.ru', headers={'User-agent': 'bl'}, GET={'emode': 'true'})[1]
