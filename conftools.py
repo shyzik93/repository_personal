@@ -24,16 +24,23 @@ def loadconf(path, _type=0):
   _conf = f.read().split('\n')
   f.close()
 
+  conf = {}
+
   if _type == 0:
-    conf = {}
     service = None
     for string in _conf:
       if not string: continue
-      name, value = string.split(':')
+      name, value = string.split(':', 1)
       value = value.strip()
       if name == 'service':
         service = value
         conf[service] = {}
         continue
       conf[service][name] = value
+  elif _type == 1:
+    for string in _conf:
+      if not string: continue
+      name, value = string.split(':', 1)
+      value = value.strip()
+      conf[name.strip()] = value.strip()
   return conf

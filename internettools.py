@@ -88,7 +88,7 @@ class InternetTools():
     #elif GET == None: response = self.opener.open(url, POST)
     #elif POST == None: response = self.opener.open(url +'?'+ GET)
     #print dir(self.opener)
-    print 'headers:', self.opener.addheaders
+    #print 'headers:', self.opener.addheaders
     str_page = response.read()
     if log_name != None: self.save_log(log_name, str_page, response)
 
