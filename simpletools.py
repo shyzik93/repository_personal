@@ -34,6 +34,7 @@ def joiner(path_png, path_rar, path_outpng):
 def find_str(in_dir, string, except_files=[], file_log=None):
   ''' Осуществляет поиск строки (регулярного выражения) по содержимому файлов '''
   def _find_str(string, dirname, names):
+    print dirname, string
     for name in names:
       path = os.path.join(dirname, name)
       if os.path.isdir(path): continue
@@ -50,8 +51,9 @@ def find_str(in_dir, string, except_files=[], file_log=None):
         for _finded in finded:
           f1.write(_finded.strip() + '\n')
         f1.write('\n')
-  os.path.walk('wb', _find_str, '.*str_replace.*')
+  if isinstance(in_dir, str): in_dir = in_dir.decode('utf-8')
+  os.path.walk(in_dir, _find_str, string)
 
 if __name__ == '__main__':
   with open('finded_strings.txt', 'w') as f1:
-    find_str('wb', '.*str_replace.*', except_files = ['css', 'js', 'htt', 'txt'], file_log=f1)
+    find_str('C:\Users\user\Desktop\Зачатки\_automatization\wb', '.*str_replace.*')
