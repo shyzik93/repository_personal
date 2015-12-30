@@ -34,7 +34,7 @@ def joiner(path_png, path_rar, path_outpng):
 def find_str(in_dir, string, except_files=[], file_log=None):
   ''' Осуществляет поиск строки (регулярного выражения) по содержимому файлов '''
   def _find_str(string, dirname, names):
-    print dirname, string
+    #print dirname, string
     for name in names:
       path = os.path.join(dirname, name)
       if os.path.isdir(path): continue

@@ -10,7 +10,13 @@ if os.sep == '\\': path = path.replace('\\', '\\\\')
 text = text.replace('{DIR_REPOSITORY_PERSONAL}', path)
 
 for path in sys.path:
-  if len(re.findall(r'.+\\Python[0-9]{2}\\lib$', path)) != 1: continue
+  if sys.platform == 'win32':
+    if len(re.findall(r'.+\\Python[0-9]{2}\\lib$', path)) != 1: continue
+  elif 'linux' in sys.platform:
+    if len(re.findall(r'\\usr\\lib\\python[0-9](?:\.[0-9])?$', path)) != 1: continue
+  else:
+    print 'Unknown OS: %s!' % sys.platform
+    break
   f = open(os.path.join(path, 'repper.py'), 'w')
   f.write(text)
   f.close()
